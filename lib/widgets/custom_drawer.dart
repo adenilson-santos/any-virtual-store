@@ -1,3 +1,4 @@
+import 'package:any_virtual_store/screens/login_screen.dart';
 import 'package:any_virtual_store/tiles/drawer_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -57,7 +58,9 @@ class CustomDrawer extends StatelessWidget {
                               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor,),
                             ),
                             onTap: () {
-                              
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => LoginScreen())
+                              );
                             },
                           ),
                         ],

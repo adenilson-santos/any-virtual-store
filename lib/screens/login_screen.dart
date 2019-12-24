@@ -1,5 +1,7 @@
+import 'package:any_virtual_store/models/user_model.dart';
 import 'package:any_virtual_store/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -27,55 +29,63 @@ class LoginScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: EdgeInsets.all(16.0),
-          children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: 'E-mail'
+      body: ScopedModelDescendant<UserModel>(
+        builder: (context, child, model) {
+          if(model.isLoading)
+            return Center(child: CircularProgressIndicator(),);
+          else
+            return Form(
+              key: _formKey,
+              child: ListView(
+                padding: EdgeInsets.all(16.0),
+                children: <Widget>[
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'E-mail'
+                    ),
+                    validator: (text) {
+                      if(text.isEmpty || !text.contains('@')) return 'E-mail invalido!';
+                    },
+                  ),
+                  SizedBox(height: 16.0,),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Senha',
+                    ),
+                    obscureText: true,
+                    validator: (text) {
+                      if(text.isEmpty || text.length < 6) return 'Senha Invalida!';
+                    },
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FlatButton(
+                      child: Text('Esqueci minha senha', textAlign: TextAlign.right,),
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+                  SizedBox(height: 16.0,),
+                  SizedBox(
+                    height: 44.0,
+                    child: RaisedButton(
+                      child: Text(
+                        'Entrar',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                      textColor: Colors.white,
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        if(_formKey.currentState.validate()) {
+                          
+                        }
+                        model.signIn();
+                      },
+                    ),
+                  )
+                ],
               ),
-              validator: (text) {
-                if(text.isEmpty || !text.contains('@')) return 'E-mail invalido!';
-              },
-            ),
-            SizedBox(height: 16.0,),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Senha',
-              ),
-              obscureText: true,
-              validator: (text) {
-                if(text.isEmpty || text.length < 6) return 'Senha Invalida!';
-              },
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: FlatButton(
-                child: Text('Esqueci minha senha', textAlign: TextAlign.right,),
-                padding: EdgeInsets.zero,
-              ),
-            ),
-            SizedBox(height: 16.0,),
-            SizedBox(
-              height: 44.0,
-              child: RaisedButton(
-                child: Text(
-                  'Entrar',
-                  style: TextStyle(fontSize: 18.0),
-                ),
-                textColor: Colors.white,
-                color: Theme.of(context).primaryColor,
-                onPressed: () {
-                  if(_formKey.currentState.validate()) {
-
-                  }
-                },
-              ),
-            )
-          ],
-        ),
+            );
+        },
       ),
     );
   }

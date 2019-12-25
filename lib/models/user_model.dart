@@ -12,6 +12,9 @@ class UserModel extends Model {
 
   bool isLoading = false;
 
+  static UserModel of(BuildContext context) =>
+         ScopedModel.of<UserModel>(context);
+
   @override
   void addListener(listener) {
     super.addListener(listener);
@@ -98,6 +101,9 @@ class UserModel extends Model {
   }
 
   bool isLoggedIn(){
+    print(firebaseUser);
+    print(userData['name']);
+    print(userData);
     return firebaseUser != null;
   }
 

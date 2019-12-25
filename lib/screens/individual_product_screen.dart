@@ -1,4 +1,9 @@
+import 'package:any_virtual_store/datas/cart_product.dart';
 import 'package:any_virtual_store/datas/product_data.dart';
+import 'package:any_virtual_store/models/cart_model.dart';
+import 'package:any_virtual_store/models/user_model.dart';
+import 'package:any_virtual_store/screens/cart_screen.dart';
+import 'package:any_virtual_store/screens/login_screen.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,10 +23,13 @@ class _IndividualProductScreenState extends State<IndividualProductScreen> {
 
   _IndividualProductScreenState(this.product);
 
-
   @override
   Widget build(BuildContext context) {
     final Color primaryColor = Theme.of(context).primaryColor;
+
+    final UserModel currentUser = UserModel.of(context);
+
+    final CartModel currentCart = CartModel.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -107,10 +115,28 @@ class _IndividualProductScreenState extends State<IndividualProductScreen> {
                   height: 44.0,
                   child: RaisedButton(
                     onPressed: selectedSize != null ? () {
+                      if(currentUser.isLoggedIn()) {
+                        CartProduct cartProduct = CartProduct();
 
+                        cartProduct.size        = selectedSize;  
+                        cartProduct.quantity    = 1;  
+                        cartProduct.productId   = product.id; 
+                        cartProduct.category    = product.category;
+                        cartProduct.productData = product;
+
+                        currentCart.addCartitem(cartProduct);
+
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => CartScreen())
+                        );
+                      } else {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => LoginScreen())
+                        );
+                      }
                     } : null,
                     child: Text(
-                      'Adicionar ao Carrinho',
+                      currentUser.isLoggedIn() ? 'Adicionar ao Carrinho' : 'Fazer login.',
                       style: TextStyle(fontSize: 18.0),
                     ),
                     color: primaryColor,
